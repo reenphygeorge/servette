@@ -1,11 +1,13 @@
 package server
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gorilla/websocket"
+	"github.com/reenphygeorge/light-server/internal/logger"
 )
+
+var globalConn *websocket.Conn
 
 func SocketUpgrader(w http.ResponseWriter, r *http.Request) (*websocket.Conn,error){
 	upgrader := websocket.Upgrader{}
@@ -14,20 +16,23 @@ func SocketUpgrader(w http.ResponseWriter, r *http.Request) (*websocket.Conn,err
 }
 
 func HandleMessage(conn *websocket.Conn) {
-    for {
-        messageType, message, err := conn.ReadMessage()
-        if err != nil {
-            log.Println("WebSocket read error:", err)
-            return
-        }
-        log.Printf("Received message: %s", message)
+    globalConn = conn
+    conn.WriteMessage(websocket.TextMessage, []byte("Welcome to Light Server"))
 
-        // Echo the message back to the client
-		serverMessage := []byte("Reload")
-        err = conn.WriteMessage(messageType, serverMessage)
-        if err != nil {
-            log.Println("WebSocket write error:", err)
-            return
-        }
+	for {
+		_, _, err := conn.ReadMessage()
+		if err != nil {
+			break
+		}
+	}
+}
+
+
+func ReloadRequest() {
+    serverMessage := []byte("Reload")
+    err := globalConn.WriteMessage(websocket.TextMessage, serverMessage)
+    if err != nil {
+        logger.Error()
+        return
     }
 }
