@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/reenphygeorge/light-server/internal/logger"
@@ -61,8 +60,7 @@ func modifyHTML(htmlContent string) string {
 	return modifiedContent
 }
 
-func Server() {	
-	port := 8001
+func Server(port string) {	
 	fileServer := http.FileServer(http.Dir("."))
 	interceptor := fileInterceptorHandler(fileServer)
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
@@ -70,16 +68,14 @@ func Server() {
         if err != nil {
             return
         } else {
-			logger.StartAndReload(strconv.Itoa(port))
+			logger.StartAndReload(port)
 		}
 		defer conn.Close()
 		HandleMessage(conn)
 	})
 	http.Handle("/", interceptor)
-	redirect.OpenURL("http://localhost:"+strconv.Itoa(port))
-	for {
-		if err := http.ListenAndServe(":"+strconv.Itoa(port), nil); err != nil {
-			port++
-		}
+	redirect.OpenURL("http://localhost:"+port)
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
+		logger.Error()
 	}
 }
