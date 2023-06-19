@@ -34,6 +34,12 @@ func StartAndReload(port string) {
     fmt.Println("\033[33mReloaded ⚡\033[0m")
 }
 
+func Visit(port string) {
+    clearScreen()
+    fmt.Println("\033[35mServer Started")
+    fmt.Println("\033[33mVisit http://localhost:"+port,"\033[0m")
+}
+
 func Error(){
     clearScreen()
     fmt.Println("\033[31mSomething's Wrong ","\033[0m")

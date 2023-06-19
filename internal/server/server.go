@@ -7,10 +7,12 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/reenphygeorge/light-server/internal/logger"
-	"github.com/reenphygeorge/light-server/internal/redirect"
 )
+
+var port int
 
 func fileInterceptorHandler(fs http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -47,8 +49,8 @@ func readFile(filePath string) (string, error) {
 }
 
 func modifyHTML(htmlContent string) string {
-	injectedScript := `<script>
-	const socket = new WebSocket("ws://localhost:8001/ws");
+	injectedScript := fmt.Sprintf(`<script>
+	const socket = new WebSocket("ws://localhost:%s/ws");
 	socket.addEventListener("open", (event) => {
 	  console.log("Welcome to Light Server!");
 	});
@@ -56,13 +58,13 @@ func modifyHTML(htmlContent string) string {
 	  if(event.data === 'Reload'){
 		location.reload();
 	  }
-	});</script>`
+	});</script>`,strconv.Itoa(port))
 	modifiedContent := strings.Replace(string(htmlContent), "</body>", injectedScript+"</body>", 1)
 	return modifiedContent
 }
 
 func Server() {	
-	port := 8001
+	port = 8001
 	fileServer := http.FileServer(http.Dir("."))
 	interceptor := fileInterceptorHandler(fileServer)
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
@@ -76,10 +78,17 @@ func Server() {
 		HandleMessage(conn)
 	})
 	http.Handle("/", interceptor)
-	redirect.OpenURL("http://localhost:"+strconv.Itoa(port))
-	for {
-		if err := http.ListenAndServe(":"+strconv.Itoa(port), nil); err != nil {
-			port++
-		}
+	serve()
+}
+
+func serve() {
+	time.Sleep(time.Second/3)
+	logger.Visit(strconv.Itoa(port))
+	err := http.ListenAndServe(":"+strconv.Itoa(port), nil);
+	if err != nil {
+		port++
+		logger.Visit(strconv.Itoa(port))
+		logger.StartAndReload(strconv.Itoa(port))
+		serve()
 	}
 }

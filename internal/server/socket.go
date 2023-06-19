@@ -27,12 +27,12 @@ func HandleMessage(conn *websocket.Conn) {
 	}
 }
 
-
 func ReloadRequest() {
-    serverMessage := []byte("Reload")
-    err := globalConn.WriteMessage(websocket.TextMessage, serverMessage)
-    if err != nil {
-        logger.Error()
-        return
-    }
+	if globalConn != nil {
+		serverMessage := []byte("Reload")
+		err := globalConn.WriteMessage(websocket.TextMessage, serverMessage)
+		if err != nil {
+			logger.Error()
+		}
+	}
 }
