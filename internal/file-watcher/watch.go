@@ -6,10 +6,10 @@ import (
 	"strconv"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/reenphygeorge/light-server/internal/config-handle"
-	"github.com/reenphygeorge/light-server/internal/logger"
-	"github.com/reenphygeorge/light-server/internal/path"
-	"github.com/reenphygeorge/light-server/internal/server"
+	"github.com/reenphygeorge/servette/internal/config-handle"
+	"github.com/reenphygeorge/servette/internal/logger"
+	"github.com/reenphygeorge/servette/internal/path"
+	"github.com/reenphygeorge/servette/internal/server"
 )
 
 /*

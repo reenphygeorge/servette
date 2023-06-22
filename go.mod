@@ -1,4 +1,4 @@
-module github.com/reenphygeorge/light-server
+module github.com/reenphygeorge/servette
 
 go 1.20
 

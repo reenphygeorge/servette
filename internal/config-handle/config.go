@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/reenphygeorge/light-server/internal/logger"
+	"github.com/reenphygeorge/servette/internal/logger"
 )
 
 // Config structure

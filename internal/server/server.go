@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/reenphygeorge/light-server/internal/logger"
+	"github.com/reenphygeorge/servette/internal/logger"
 )
 
 /*

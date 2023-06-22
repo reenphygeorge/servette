@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	"github.com/reenphygeorge/light-server/internal/logger"
+	"github.com/reenphygeorge/servette/internal/logger"
 )
 
 /*

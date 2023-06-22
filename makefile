@@ -1,6 +1,6 @@
 GO := go
 
-EXECUTABLE := ./build/light-server
+EXECUTABLE := ./build/servette
 
 build-linux:
 	GOOS=linux GOARCH=amd64
