@@ -1,13 +1,25 @@
 package watch
 
 import (
+	"fmt"
+	"os"
+	"strconv"
+
 	"github.com/fsnotify/fsnotify"
+	"github.com/reenphygeorge/light-server/internal/config-handle"
 	"github.com/reenphygeorge/light-server/internal/logger"
+	"github.com/reenphygeorge/light-server/internal/path"
 	"github.com/reenphygeorge/light-server/internal/server"
 )
 
-// Watch all files in the provided path for changes.
-func WatchFiles(pathList []string) {
+/*
+	Watch all files in the provided path for changes.
+	If a new directory is created then it's path is added to watcher.
+*/
+func WatchFiles(pathList []string, htmlFiles *[]string, configObject config.Config) {
+	for _,htmlFile := range(*htmlFiles) {
+		fmt.Println("\033[33m\t",htmlFile,"\n\033[0m")
+	}
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		logger.Error()
@@ -21,12 +33,29 @@ func WatchFiles(pathList []string) {
 	}
 	for {
 		select {
-		case _, ok := <-watcher.Events:
+		case event, ok := <-watcher.Events:
 			if !ok {
 				return
 			}
+			if event.Op&fsnotify.Create == fsnotify.Create {
+				isDir, _ := isDirectory(event.Name)
+				if isDir == true {
+					watcher.Add(event.Name)
+				} else {
+					*htmlFiles = path.GetFilePaths(configObject.RootPath, configObject.SkipDirectories,1)
+				}
+			} else if event.Op&fsnotify.Remove == fsnotify.Remove {
+				isDir, _ := isDirectory(event.Name)
+				if isDir == true {
+					watcher.Remove(event.Name)
+				}
+			}
 			logger.Reloading()
-			server.ReloadRequest()
+			if server.GlobalConn != nil {
+				server.ReloadRequest()
+			} else {
+				logger.StartAndReload(strconv.Itoa(configObject.Port),htmlFiles)
+			}
 		case _, ok := <-watcher.Errors:
 			if !ok {
 				return
@@ -34,4 +63,13 @@ func WatchFiles(pathList []string) {
 			logger.Error()
 		}
 	}
+}
+
+// Checks whether the newly created item is a directory or a file.
+func isDirectory(path string) (bool, error) {
+	fileInfo, err := os.Stat(path)
+	if err != nil {
+		return false, err
+	}
+	return fileInfo.IsDir(), nil
 }

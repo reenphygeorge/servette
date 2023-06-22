@@ -12,6 +12,11 @@ import (
 	"github.com/reenphygeorge/light-server/internal/logger"
 )
 
+/*
+	Global port.
+	Will hold port number read from config.
+	Used to avoid argument passing through out the functions.
+*/
 var globalPort int
 
 // Intercept http request and call modifyHTML function.
@@ -72,7 +77,7 @@ func modifyHTML(htmlContent string) string {
 }
 
 // Server main functions.
-func Server(port int) {
+func Server(port int, htmlFiles *[]string) {
 	globalPort = port
 	fileServer := http.FileServer(http.Dir("."))
 	interceptor := fileInterceptorHandler(fileServer)
@@ -81,24 +86,24 @@ func Server(port int) {
 		if err != nil {
 			return
 		} else {
-			logger.StartAndReload(strconv.Itoa(globalPort))
+			logger.StartAndReload(strconv.Itoa(globalPort), htmlFiles)
 		}
 		defer conn.Close()
 		HandleMessage(conn)
 	})
 	http.Handle("/", interceptor)
-	serve()
+	serve(htmlFiles)
 }
 
 // Starting server at available port
-func serve() {
+func serve(htmlFiles *[]string) {
 	time.Sleep(time.Second / 3)
-	logger.Visit(strconv.Itoa(globalPort))
+	logger.Visit(strconv.Itoa(globalPort),htmlFiles)
 	err := http.ListenAndServe(":"+strconv.Itoa(globalPort), nil)
 	if err != nil {
 		globalPort++
-		logger.Visit(strconv.Itoa(globalPort))
-		logger.StartAndReload(strconv.Itoa(globalPort))
-		serve()
+		logger.Visit(strconv.Itoa(globalPort),htmlFiles)
+		logger.StartAndReload(strconv.Itoa(globalPort), htmlFiles)
+		serve(htmlFiles)
 	}
 }

@@ -1,6 +1,11 @@
 package main
 
 import (
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
+
 	"github.com/reenphygeorge/light-server/internal/config-handle"
 	watch "github.com/reenphygeorge/light-server/internal/file-watcher"
 	"github.com/reenphygeorge/light-server/internal/logger"
@@ -9,10 +14,19 @@ import (
 )
 
 func main() {
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		<-interrupt
+		logger.Exit()
+		time.Sleep(500 * time.Millisecond)
+		os.Exit(0)
+	}()
 	var configObject config.Config
 	config.GetValues(&configObject)
 	logger.StaringServer()
-	vistedPath := path.GetFilePaths(configObject.RootPath, configObject.SkipDirectories)
-	go watch.WatchFiles(vistedPath)
-	server.Server(configObject.Port)
+	vistedPath := path.GetFilePaths(configObject.RootPath, configObject.SkipDirectories,0)
+	htmlFiles := path.GetFilePaths(configObject.RootPath, configObject.SkipDirectories,1)
+	go watch.WatchFiles(vistedPath, &htmlFiles, configObject)
+	server.Server(configObject.Port, &htmlFiles)
 }

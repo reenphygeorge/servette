@@ -26,8 +26,7 @@ build-all:
 	cp lsconfig.json ./build
 
 run:
-	$(GO) build -o $(EXECUTABLE) ./cmd/main.go
-	./$(EXECUTABLE)
+	$(GO) run ./cmd/main.go
 
 clean-all:
 	rm -rf ./build
