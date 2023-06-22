@@ -10,9 +10,9 @@ import (
 
 // Config structure
 type Config struct {
-	StartPort int `json:"startPort"`
+	Port            int      `json:"port"`
 	SkipDirectories []string `json:"skipDirectories"`
-	RootPath string `json:"rootPath"`
+	RootPath        string   `json:"rootPath"`
 }
 
 // Get values from config and insert it to struct object

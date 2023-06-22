@@ -12,29 +12,36 @@ import (
 	"github.com/reenphygeorge/light-server/internal/logger"
 )
 
-var port int
+var globalPort int
 
+// Intercept http request and call modifyHTML function.
 func fileInterceptorHandler(fs http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		url := r.URL.Path
-		if(!strings.Contains(url,".")) {
-			url = url+"index.html"
+		if !strings.Contains(url, ".") {
+			url = url + "index.html"
 		}
 		if strings.HasSuffix(url, ".html") {
-			htmlContent, err := readFile("."+url)
+			htmlContent, err := readFile("." + url)
 			if err != nil {
-				http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+				http.Error(w, "Page not found!", http.StatusNotFound)
 				return
 			}
 			modifiedHTML := modifyHTML(htmlContent)
 			w.Header().Set("Content-Type", "text/html")
 			fmt.Fprint(w, modifiedHTML)
 			return
+		} else if strings.HasSuffix(url, ".css") {
+			w.Header().Set("Content-Type", "text/css")
+			w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+			w.Header().Set("Pragma", "no-cache")
+			w.Header().Set("Expires", "0")
 		}
 		fs.ServeHTTP(w, r)
 	})
 }
 
+// Read and return html files.
 func readFile(filePath string) (string, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -48,6 +55,7 @@ func readFile(filePath string) (string, error) {
 	return string(content), nil
 }
 
+// Modify html files and add inject socket connection code.
 func modifyHTML(htmlContent string) string {
 	injectedScript := fmt.Sprintf(`<script>
 	const socket = new WebSocket("ws://localhost:%s/ws");
@@ -58,21 +66,22 @@ func modifyHTML(htmlContent string) string {
 	  if(event.data === 'Reload'){
 		location.reload();
 	  }
-	});</script>`,strconv.Itoa(port))
+	});</script>`, strconv.Itoa(globalPort))
 	modifiedContent := strings.Replace(string(htmlContent), "</body>", injectedScript+"</body>", 1)
 	return modifiedContent
 }
 
-func Server() {	
-	port = 8001
+// Server main functions.
+func Server(port int) {
+	globalPort = port
 	fileServer := http.FileServer(http.Dir("."))
 	interceptor := fileInterceptorHandler(fileServer)
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		conn,err := SocketUpgrader(w,r)
-        if err != nil {
-            return
-        } else {
-			logger.StartAndReload(strconv.Itoa(port))
+		conn, err := SocketUpgrader(w, r)
+		if err != nil {
+			return
+		} else {
+			logger.StartAndReload(strconv.Itoa(globalPort))
 		}
 		defer conn.Close()
 		HandleMessage(conn)
@@ -81,14 +90,15 @@ func Server() {
 	serve()
 }
 
+// Starting server at available port
 func serve() {
-	time.Sleep(time.Second/3)
-	logger.Visit(strconv.Itoa(port))
-	err := http.ListenAndServe(":"+strconv.Itoa(port), nil);
+	time.Sleep(time.Second / 3)
+	logger.Visit(strconv.Itoa(globalPort))
+	err := http.ListenAndServe(":"+strconv.Itoa(globalPort), nil)
 	if err != nil {
-		port++
-		logger.Visit(strconv.Itoa(port))
-		logger.StartAndReload(strconv.Itoa(port))
+		globalPort++
+		logger.Visit(strconv.Itoa(globalPort))
+		logger.StartAndReload(strconv.Itoa(globalPort))
 		serve()
 	}
 }

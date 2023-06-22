@@ -6,6 +6,7 @@ import (
 	"github.com/reenphygeorge/light-server/internal/server"
 )
 
+// Watch all files in the provided path for changes.
 func WatchFiles(pathList []string) {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {

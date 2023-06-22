@@ -9,15 +9,15 @@ import (
 
 var globalConn *websocket.Conn
 
-func SocketUpgrader(w http.ResponseWriter, r *http.Request) (*websocket.Conn,error){
+func SocketUpgrader(w http.ResponseWriter, r *http.Request) (*websocket.Conn, error) {
 	upgrader := websocket.Upgrader{}
 	conn, err := upgrader.Upgrade(w, r, nil)
 	return conn, err
 }
 
 func HandleMessage(conn *websocket.Conn) {
-    globalConn = conn
-    conn.WriteMessage(websocket.TextMessage, []byte("Welcome to Light Server"))
+	globalConn = conn
+	conn.WriteMessage(websocket.TextMessage, []byte("Welcome to Light Server"))
 
 	for {
 		_, _, err := conn.ReadMessage()
