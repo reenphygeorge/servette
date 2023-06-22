@@ -5,12 +5,18 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 )
 
 func clearScreen() {
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
-		cmd = exec.Command("cmd", "/c", "cls")
+		terminal := os.Getenv("COMSPEC")
+		if strings.Contains(strings.ToLower(terminal), "powershell") {
+			cmd = exec.Command("cmd", "/c", "cls")
+		} else {
+			cmd = exec.Command("powershell", "-command", "Clear-Host")
+		}
 	} else {
 		cmd = exec.Command("clear")
 	}

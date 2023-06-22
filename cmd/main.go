@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/reenphygeorge/light-server/internal/config-handle"
 	watch "github.com/reenphygeorge/light-server/internal/file-watcher"
-	logger "github.com/reenphygeorge/light-server/internal/logger"
-	path "github.com/reenphygeorge/light-server/internal/path"
-	server "github.com/reenphygeorge/light-server/internal/server"
+	"github.com/reenphygeorge/light-server/internal/logger"
+	"github.com/reenphygeorge/light-server/internal/path"
+	"github.com/reenphygeorge/light-server/internal/server"
 )
 
 func main() {
