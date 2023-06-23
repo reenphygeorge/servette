@@ -23,7 +23,7 @@ build-all:
 	make build-windows-x86
 	make build-windows-x86-64
 	make build-macos
-	cp lsconfig.json ./build
+	cp srv.config.json ./build
 
 run:
 	$(GO) run ./cmd/main.go

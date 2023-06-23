@@ -22,13 +22,13 @@ func WatchFiles(pathList []string, htmlFiles *[]string, configObject config.Conf
 	}
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
-		logger.Error()
+		logger.Error("")
 	}
 	defer watcher.Close()
 	for _, path := range pathList {
 		err = watcher.Add(path)
 		if err != nil {
-			logger.Error()
+			logger.Error("")
 		}
 	}
 	for {
@@ -37,12 +37,11 @@ func WatchFiles(pathList []string, htmlFiles *[]string, configObject config.Conf
 			if !ok {
 				return
 			}
+			*htmlFiles = path.GetFilePaths(configObject.RootPath, configObject.SkipDirectories,1)
 			if event.Op&fsnotify.Create == fsnotify.Create {
 				isDir, _ := isDirectory(event.Name)
 				if isDir == true {
 					watcher.Add(event.Name)
-				} else {
-					*htmlFiles = path.GetFilePaths(configObject.RootPath, configObject.SkipDirectories,1)
 				}
 			} else if event.Op&fsnotify.Remove == fsnotify.Remove {
 				isDir, _ := isDirectory(event.Name)
@@ -60,7 +59,7 @@ func WatchFiles(pathList []string, htmlFiles *[]string, configObject config.Conf
 			if !ok {
 				return
 			}
-			logger.Error()
+			logger.Error("")
 		}
 	}
 }

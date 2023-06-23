@@ -18,7 +18,7 @@ func filterPaths(path string, skipDirs []string, file fs.DirEntry, err error, mo
 	var dirList []string
 
 	if err != nil {
-		logger.Error()
+		logger.Error("")
 		return err, nil
 	}
 
@@ -58,7 +58,7 @@ func GetFilePaths(rootPath string, skipDirs []string, mode int) []string {
 	})
 
 	if err != nil {
-		logger.Error()
+		logger.Error("")
 	}
 
 	return visitedPaths

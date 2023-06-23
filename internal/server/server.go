@@ -65,7 +65,7 @@ func modifyHTML(htmlContent string) string {
 	injectedScript := fmt.Sprintf(`<script>
 	const socket = new WebSocket("ws://localhost:%s/ws");
 	socket.addEventListener("open", (event) => {
-	  console.log("Welcome to Light Server!");
+	  console.log("Welcome to Servette !");
 	});
 	socket.addEventListener("message", (event) => {
 	  if(event.data === 'Reload'){

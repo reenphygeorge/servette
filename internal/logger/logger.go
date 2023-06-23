@@ -59,9 +59,13 @@ func Visit(port string, htmlFiles *[]string) {
 	displayHTMLPaths(htmlFiles)
 }
 
-func Error() {
+func Error(message string) {
 	clearScreen()
-	fmt.Println("\033[31mSomething's Wrong ", "\033[0m")
+	if message == "" {
+		fmt.Println("\033[31mSomething's Wrong ", "\033[0m")
+	} else {
+		fmt.Println("\033[31m",message, "\033[0m")
+	}
 }
 
 func Exit() {

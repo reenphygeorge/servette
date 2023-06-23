@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/reenphygeorge/servette/internal/logger"
 )
@@ -17,10 +18,11 @@ type Config struct {
 
 // Get values from config and insert it to struct object
 func GetValues(configObject *Config) {
-	filePath := "lsconfig.json"
+	filePath := "srv.config.json"
 	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		logger.Error()
+		logger.Error("Config file not found! ")
+		os.Exit(0)
 	}
 	err = json.Unmarshal(data, configObject)
 	if err != nil {

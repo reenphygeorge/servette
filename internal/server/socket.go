@@ -24,7 +24,7 @@ func SocketUpgrader(w http.ResponseWriter, r *http.Request) (*websocket.Conn, er
 // To handle messages from client side.
 func HandleMessage(conn *websocket.Conn) {
 	GlobalConn = conn
-	conn.WriteMessage(websocket.TextMessage, []byte("Welcome to Light Server"))
+	conn.WriteMessage(websocket.TextMessage, []byte("Welcome to Servette!"))
 
 	for {
 		_, _, err := conn.ReadMessage()
@@ -43,7 +43,7 @@ func ReloadRequest() {
 		serverMessage := []byte("Reload")
 		err := GlobalConn.WriteMessage(websocket.TextMessage, serverMessage)
 		if err != nil {
-			logger.Error()
+			logger.Error("")
 		}
 	}
 }
