@@ -19,7 +19,7 @@
 
 #### Linux and macOS
 
-1. [Download]("https://github.com/reenphygeorge/servette/releases/tag/v1.0.0") and unzip the executable
+1. <a href="https://github.com/reenphygeorge/servette/releases/tag/v1.0.0">Download</a> and unzip the executable
 2. Open the folder in terminal and run the following to grant execute permissions
 
        chmod +x install.sh
@@ -34,7 +34,7 @@
 
 #### Windows
 
-1. [Download]("https://github.com/reenphygeorge/servette/releases/tag/v1.0.0") and unzip the executable
+1. <a href="https://github.com/reenphygeorge/servette/releases/tag/v1.0.0">Download</a> and unzip the executable
 2. Add path to environment variables
 3. Run the executable
 
