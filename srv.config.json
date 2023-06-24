@@ -1,5 +1,0 @@
-{
-  "port": 5500,
-  "skipDirectories": ["git", "node_modules"],
-  "rootPath": "."
-}

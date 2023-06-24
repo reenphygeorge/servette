@@ -22,11 +22,14 @@ func main() {
 		time.Sleep(500 * time.Millisecond)
 		os.Exit(0)
 	}()
+
+	rootPath := "."
 	var configObject config.Config
+	
 	config.GetValues(&configObject)
 	logger.StaringServer()
-	vistedPath := path.GetFilePaths(configObject.RootPath, configObject.SkipDirectories,0)
-	htmlFiles := path.GetFilePaths(configObject.RootPath, configObject.SkipDirectories,1)
-	go watch.WatchFiles(vistedPath, &htmlFiles, configObject)
+	vistedPath := path.GetFilePaths(rootPath, configObject.SkipDirectories,0)
+	htmlFiles := path.GetFilePaths(rootPath, configObject.SkipDirectories,1)
+	go watch.WatchFiles(vistedPath, &htmlFiles, configObject, rootPath)
 	server.Server(configObject.Port, &htmlFiles)
 }

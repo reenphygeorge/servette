@@ -16,7 +16,7 @@ import (
 	Watch all files in the provided path for changes.
 	If a new directory is created then it's path is added to watcher.
 */
-func WatchFiles(pathList []string, htmlFiles *[]string, configObject config.Config) {
+func WatchFiles(pathList []string, htmlFiles *[]string, configObject config.Config, rootPath string) {
 	for _,htmlFile := range(*htmlFiles) {
 		fmt.Println("\033[33m\t",htmlFile,"\n\033[0m")
 	}
@@ -37,7 +37,7 @@ func WatchFiles(pathList []string, htmlFiles *[]string, configObject config.Conf
 			if !ok {
 				return
 			}
-			*htmlFiles = path.GetFilePaths(configObject.RootPath, configObject.SkipDirectories,1)
+			*htmlFiles = path.GetFilePaths(rootPath, configObject.SkipDirectories,1)
 			if event.Op&fsnotify.Create == fsnotify.Create {
 				isDir, _ := isDirectory(event.Name)
 				if isDir == true {

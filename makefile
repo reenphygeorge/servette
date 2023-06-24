@@ -1,6 +1,6 @@
 GO := go
 
-EXECUTABLE := ./build/servette
+EXECUTABLE := ./build/srt
 
 build-linux:
 	GOOS=linux GOARCH=amd64
@@ -23,7 +23,6 @@ build-all:
 	make build-windows-x86
 	make build-windows-x86-64
 	make build-macos
-	cp srv.config.json ./build
 
 run:
 	$(GO) run ./cmd/main.go

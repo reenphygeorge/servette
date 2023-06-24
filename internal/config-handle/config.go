@@ -3,7 +3,6 @@ package config
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"os"
 
 	"github.com/reenphygeorge/servette/internal/logger"
@@ -13,19 +12,19 @@ import (
 type Config struct {
 	Port            int      `json:"port"`
 	SkipDirectories []string `json:"skipDirectories"`
-	RootPath        string   `json:"rootPath"`
 }
 
 // Get values from config and insert it to struct object
 func GetValues(configObject *Config) {
-	filePath := "srv.config.json"
-	data, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		logger.Error("Config file not found! ")
-		os.Exit(0)
-	}
-	err = json.Unmarshal(data, configObject)
-	if err != nil {
-		log.Fatal("Error parsing config file:", err)
+	filePath := "srt.config.json"
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		configObject.Port = 5500
+		configObject.SkipDirectories = append(configObject.SkipDirectories, "git")
+	} else {
+		data, err := ioutil.ReadFile(filePath)
+		err = json.Unmarshal(data, configObject)
+		if err != nil {
+			logger.Error("")
+		}
 	}
 }

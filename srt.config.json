@@ -1,0 +1,4 @@
+{
+  "port": 5500,
+  "skipDirectories": ["node_modules", "api"]
+}
