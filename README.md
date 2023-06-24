@@ -1,3 +1,4 @@
+<br/>
 <div align="center">
   <a href="https://github.com/reenphygeorge/servette">
     <img
@@ -41,5 +42,5 @@
        srt
 
 ## Extend
-Use a <a href="https://github.com/reenphygeorge/servette/blob/main/srt.config.json">srt.config.json</a> file in your project to modify values like ``port`` ``Skip Directories``<br/>
+Use <a href="https://github.com/reenphygeorge/servette/blob/main/srt.config.json">srt.config</a> file in your project to modify values like ``port`` ``Skip Directories``<br/>
 ###### By default skips .git directory no need to add it again.
