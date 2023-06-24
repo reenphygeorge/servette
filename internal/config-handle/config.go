@@ -23,6 +23,7 @@ func GetValues(configObject *Config) {
 	} else {
 		data, err := ioutil.ReadFile(filePath)
 		err = json.Unmarshal(data, configObject)
+		configObject.SkipDirectories = append(configObject.SkipDirectories, "git")
 		if err != nil {
 			logger.Error("")
 		}
