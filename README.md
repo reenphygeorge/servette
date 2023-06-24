@@ -39,3 +39,7 @@
 3. Run the executable
 
        srt
+
+## Extend
+Use a <a href="https://github.com/reenphygeorge/servette/blob/main/srt.config.json">srt.config.json</a> file in your project to modify values like ``port`` ``Skip Directories``<br/>
+###### By default skips .git directory no need to add it again.
