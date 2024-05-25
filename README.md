@@ -15,7 +15,7 @@
   </p>
   <p>
   <br/><br/>
-  <img src="assets/demo.gif" height="350"/>
+  <img src="assets/demo.gif"/>
 </div>
 
 ## Installation
